@@ -2,7 +2,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AppLogger } from './common/logger/app-logger.service';
-import { ConfigService } from './config/config.service';
+import { AppConfigService } from './config/config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -10,13 +10,13 @@ async function bootstrap() {
   });
 
   const logger = app.get(AppLogger);
-  const config = app.get(ConfigService);
+  const appConfig = app.get(AppConfigService);
 
-  logger.setLogLevelsByEnv(config.appConfig.nodeEnv);
+  logger.setLogLevelsByEnv(appConfig.config.app.node_env);
 
   app.useLogger(logger);
 
   logger.log('🚀 App is starting...');
-  await app.listen(config.appConfig.port);
+  await app.listen(appConfig.config.app.port);
 }
 bootstrap();

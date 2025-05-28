@@ -1,22 +1,35 @@
-// src/config/config.service.ts
 import { Injectable } from '@nestjs/common';
-import { ConfigService as NestConfigService } from '@nestjs/config';
-import { AppConfig } from './config.types';
+import { ConfigService } from '@nestjs/config';
+
+
+
+
 
 @Injectable()
-export class ConfigService {
-    constructor(private readonly config: NestConfigService) { }
+export class AppConfigService {
+    private readonly _db: DbConfig;
+    private readonly _app:AppConfig;
 
-    get appConfig(): AppConfig {
-        return {
-            port: parseInt(this.config.get('PORT', '3000')),
-            nodeEnv: this.config.get('NODE_ENV', 'development'),
-            db_host: this.config.getOrThrow<string>('DB_HOST'),
-            db_port: parseInt(this.config.getOrThrow<string>('DB_PORT')),
-            db_username: this.config.getOrThrow<string>('DB_USERNAME'),
-            db_password: this.config.getOrThrow<string>('DB_PASSWORD'),
-            db_name: this.config.get<string>('DB_NAME'), // Optional, can be undefined
-            jwtSecret: this.config.getOrThrow<string>('JWT_SECRET'),
+    constructor(private readonly configService: ConfigService) {
+        this._db = {
+            host: this.configService.get('DB_HOST') as string,
+            port:this.configService.get('DB_PORT') as number,
+            username:this.configService.get('DB_USER') as string,
+            paswword:this.configService.get('DB_PASSWORD') as string,
+            database:this.configService.get('DB_NAME') as string,
+            ssl:this.configService.get('DB_SSL') as boolean
         };
+
+        this._app ={
+            port:this.configService.get('PORT') as number,
+            node_env:this.configService.get('NODE_ENV') as string,
+        }
     }
+    get config() {
+        return {
+          db: this._db,
+          app:this._app
+        };
+      }
+    
 }

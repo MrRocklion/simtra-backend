@@ -1,30 +1,25 @@
-// src/app.module.ts o src/database/database.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigService } from 'src/config/config.service';
-import { ConfigModule } from 'src/config/config.module';
-
+import { AppConfigModule } from 'src/config/config.module';
+import { AppConfigService} from 'src/config/config.service';
 @Module({
   imports: [
-    ConfigModule,
+    AppConfigModule, // Importa ConfigModule para acceder a las variables de entorno
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const db = configService.appConfig;
-        return {
-          type: 'postgres',
-          host: db.db_host,
-          port: db.db_port,
-          username: db.db_username,
-          password: db.db_password,
-          database: db.db_name,
-          synchronize: true,
-          autoLoadEntities: true,
-        };
-      },
+      imports: [AppConfigModule], // Asegura que ConfigService esté disponible
+      inject: [AppConfigService], // Inyecta el servicio de configuración
+      useFactory: (configService: AppConfigService) => ({
+        type: 'postgres',
+        host: configService.config.db.host,
+        port: configService.config.db.port,
+        username: configService.config.db.username,
+        password: configService.config.db.paswword,
+        database: configService.config.db.database,
+        entities: [],
+        synchronize: false,
+      }),
     }),
   ],
-}
-)
+  exports: [TypeOrmModule], // Exportamos TypeORM para usarlo en otros módulos
+})
 export class DatabaseModule {}
