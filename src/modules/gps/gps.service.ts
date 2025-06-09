@@ -10,6 +10,7 @@ export class GpsService {
   constructor(
     @InjectRepository(Gps)
     private readonly gpsRepository: Repository<Gps>,
+    @InjectRepository(Vehicle)
     private readonly vehicleRepository:Repository<Vehicle>,
   ) {}
 
@@ -20,7 +21,7 @@ export class GpsService {
     });
   }
 
-  async createByVehicleId(gpsCreateDto:GpsCreateDto):Promise<Gps> {
+  async createPoint(gpsCreateDto:GpsCreateDto):Promise<Gps> {
     
     const { vehicleId, ...gpsData } = gpsCreateDto;
     const vehicle = await this.vehicleRepository.findOne({

@@ -12,3 +12,10 @@ interface AppConfig {
     port: number;
     node_env: string;
 }
+
+interface MqttConfig {
+    broker: string;
+    port: number;
+    username: string;
+    password: string;
+}

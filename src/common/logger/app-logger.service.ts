@@ -1,7 +1,7 @@
 import { ConsoleLogger, Injectable, LogLevel } from '@nestjs/common';
 
 @Injectable()
-export class AppLogger extends ConsoleLogger {
+export class AppLoggerService extends ConsoleLogger {
   private defaultContext = 'AppLogger';
 
   constructor(context?: string) {

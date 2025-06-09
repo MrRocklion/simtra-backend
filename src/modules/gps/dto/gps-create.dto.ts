@@ -10,7 +10,7 @@ export class GpsCreateDto {
   @ApiProperty({ example: 1.21521521 })
   @IsNotEmpty()
   @IsNumber()
-  lon: number;
+  lng: number;
 
   @ApiProperty({ example: 1 })
   @IsNotEmpty()

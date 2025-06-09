@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { AppLogger } from './common/logger/app-logger.service';
+import { AppLoggerService } from './common/logger/app-logger.service';
 import { AppConfigService } from './config/config.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -9,7 +9,7 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
-  const logger = app.get(AppLogger);
+  const logger = app.get(AppLoggerService);
   const appConfig = app.get(AppConfigService);
 
   logger.setLogLevelsByEnv(appConfig.config.app.node_env);
