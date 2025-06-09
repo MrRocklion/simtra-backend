@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppConfigModule } from 'src/config/config.module';
 import { AppConfigService} from 'src/config/config.service';
+import { Gps } from './entities/gps.entity';
+import { User } from './entities/user.entity';
+import { Vehicle } from './entities/vehicle.entity';
 @Module({
   imports: [
     AppConfigModule, // Importa ConfigModule para acceder a las variables de entorno
@@ -15,7 +18,9 @@ import { AppConfigService} from 'src/config/config.service';
         username: configService.config.db.username,
         password: configService.config.db.paswword,
         database: configService.config.db.database,
-        entities: [],
+        entities: [
+          Gps,User,Vehicle
+        ],
         synchronize: false,
       }),
     }),
