@@ -31,9 +31,9 @@ export class AppLoggerService extends ConsoleLogger {
 
   setLogLevelsByEnv(env: string) {
     if (env === 'production') {
-      this.setLogLevels(['log', 'warn', 'error']);
+      this.setLogLevels(['log', 'error']);
     } else {
-      this.setLogLevels(['log', 'warn', 'error', 'debug', 'verbose']);
+      this.setLogLevels(['log', 'error', 'debug', 'verbose']);
     }
   }
 }

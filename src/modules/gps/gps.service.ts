@@ -17,7 +17,7 @@ export class GpsService {
   async findByVehicleId(vehicleId: number): Promise<Gps[]> {
     return this.gpsRepository.find({
       where: { vehicle: { id: vehicleId } },
-      order: { timestamp: 'DESC' },
+      order: { created_at: 'DESC' },
     });
   }
 

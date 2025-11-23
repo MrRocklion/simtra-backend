@@ -5,6 +5,8 @@ import { AppConfigService} from 'src/config/config.service';
 import { Gps } from './entities/gps.entity';
 import { User } from './entities/user.entity';
 import { Vehicle } from './entities/vehicle.entity';
+import { Company } from './entities/company.entity';
+import { Line } from './entities/line.entity';
 @Module({
   imports: [
     AppConfigModule, // Importa ConfigModule para acceder a las variables de entorno
@@ -19,7 +21,7 @@ import { Vehicle } from './entities/vehicle.entity';
         password: configService.config.db.paswword,
         database: configService.config.db.database,
         entities: [
-          Gps,User,Vehicle
+          Gps,User,Vehicle,Company,Line
         ],
         synchronize: false,
       }),

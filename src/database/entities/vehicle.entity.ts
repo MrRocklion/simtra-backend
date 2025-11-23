@@ -2,43 +2,86 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToMany,
   ManyToOne,
+  JoinColumn,
+  OneToMany,
+  Index,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Company } from './company.entity';
 import { Gps } from './gps.entity';
+import { OperationStatus } from 'src/common/enum/operation-status.enum';
+import { Grupo } from 'src/common/enum/grupo.enum';
+import { Line } from './line.entity';
 
 @Entity('vehicles')
+@Index(['register'])
 export class Vehicle {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  plate: string;
+  @Column({ type: 'int', unique: true })
+  register: number;
 
-  @Column()
-  brand: string;
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  plate?: string;
 
-  @Column()
-  model: string;
+  @Column({
+    type: 'enum',
+    enum: OperationStatus,
+    default: OperationStatus.INACTIVE,
+  })
+  operation_status: OperationStatus;
 
-  @Column()
-  year: number;
+  @Column({
+    type: 'enum',
+    enum: Grupo,
+  })
+  grupo: Grupo;
 
-  @Column({ default: true })
+  @Column({ type: 'boolean', default: true })
   status: boolean;
 
-  @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
-  createdAt: Date;
+  @CreateDateColumn({ type: 'timestamptz' })
+  created_at: Date;
 
-  @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
-  updatedAt: Date;
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updated_at: Date;
 
-  @ManyToOne(() => User, user => user.vehicles, { onDelete: 'CASCADE' })
-  user: User;
+  @Column({ type: 'int', nullable: true })
+  user_id?: number;
 
-  @OneToMany(() => Gps, gps => gps.vehicle)
-  gpsRecords: Gps[];
+  @Column({ type: 'int', nullable: true })
+  line_id?: number;
+
+  @Column({ type: 'int', nullable: true })
+  company_id?: number;
+
+  // Relaciones
+  
+  @ManyToOne(() => User, (user) => user.vehicles, { 
+    nullable: true, 
+    onDelete: 'SET NULL' 
+  })
+  @JoinColumn({ name: 'user_id' })
+  user?: User;
+
+  @ManyToOne(() => Line, (line) => line.vehicles, { 
+    nullable: true, 
+    onDelete: 'SET NULL' 
+  })
+  @JoinColumn({ name: 'line_id' })
+  line?: Line;
+
+  @ManyToOne(() => Company, (company) => company.vehicles, { 
+    nullable: true, 
+    onDelete: 'SET NULL' 
+  })
+  @JoinColumn({ name: 'company_id' })
+  company?: Company;
+
+  @OneToMany(() => Gps, (gps) => gps.vehicle)
+  gps_records: Gps[];
 }

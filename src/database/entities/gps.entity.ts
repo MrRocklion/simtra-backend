@@ -1,23 +1,33 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { Vehicle } from './vehicle.entity';
 
 @Entity('gps')
+@Index(['vehicle', 'recorded_at'])
 export class Gps {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Vehicle, vehicle => vehicle.gpsRecords, { onDelete: 'CASCADE' })
-  vehicle: Vehicle;
+  @Column({ type: 'decimal', precision: 10, scale: 8 })
+  latitude: number;
 
-  @Column('float')
-  lat: number;
+  @Column({ type: 'decimal', precision: 11, scale: 8 })
+  longitude: number;
 
-  @Column('float')
-  lng: number;
+  @Column({ type: 'decimal', precision: 6, scale: 2 })
+  velocity: number;
 
   @Column({ type: 'timestamptz' })
-  timestamp: Date;
-
+  @Index()
+  recorded_at: Date;
+  
   @CreateDateColumn({ type: 'timestamptz' })
-  createdAt: Date;
+  created_at: Date;
+
+  @Column({ type: 'int', nullable: false })
+  vehicle_id: number;
+  
+  // Relaciones
+  @ManyToOne(() => Vehicle, vehicle => vehicle.gps_records, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'vehicle_id' })
+  vehicle: Vehicle;
 }
